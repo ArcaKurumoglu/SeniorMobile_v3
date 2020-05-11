@@ -34,9 +34,6 @@ import Routes from './components/Routes';
                 <View style={styles.container}>
                     <StatusBar backgroundColor="#09203f"
                         barStyle="light-content" />
-                            
-
-
                     <Routes />
                 </View>
             

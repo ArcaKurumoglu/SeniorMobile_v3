@@ -15,22 +15,26 @@ import Events from '../pages/Events';
 import AnnouncementTab from '../pages/AnnouncementTab';
 import CollapsibleList from "react-native-collapsible-list";
 const { width } = Dimensions.get("window");
+import axios from 'axios';
 
 
 
 
-export default class App extends React.Component {
-
+export default class Announcements extends React.Component {
+    constructor() {
+        super();    
+        this.state = {
+            active: 0,
+            xAnnouncements: 0,
+            xEvents: 0,
+            translateX: new Animated.Value(0),
+            translateXAnnouncements: new Animated.Value(0),
+            translateXEvents: new Animated.Value(width),
+            translateY: -1000
+        }
+    }
+ 
     
-    state = {
-        active: 0,
-        xAnnouncements: 0,
-        xEvents: 0,
-        translateX: new Animated.Value(0),
-        translateXAnnouncements: new Animated.Value(0),
-        translateXEvents: new Animated.Value(width),
-        translateY: -1000
-    };
 
     handleSlide = type => {
         let {
@@ -41,6 +45,7 @@ export default class App extends React.Component {
             translateXAnnouncements,
             translateXEvents
         } = this.state;
+
         Animated.spring(translateX, {
             toValue: type,
             duration: 100
@@ -80,6 +85,8 @@ export default class App extends React.Component {
             translateXEvents,
             translateY
         } = this.state;
+        const announcements = this.state.announcements;
+        // console.log(announcements);
         return (
             <View style={{ flex: 1 }}>
                 <View

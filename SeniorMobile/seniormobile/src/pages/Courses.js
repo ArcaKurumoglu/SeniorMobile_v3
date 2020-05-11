@@ -9,8 +9,8 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, Platform, FlatList, Image, SafeAreaView, ScrollView } from 'react-native';
 import { Dropdown } from 'react-native-material-dropdown';
-import {Header} from 'react-native-elements';
- 
+import { Header } from 'react-native-elements';
+
 
 export default class Courses extends Component {
 
@@ -38,7 +38,7 @@ export default class Courses extends Component {
             value: '11.40 - 12-30',
         }, {
             value: '13.40 - 14.30',
-        }, 
+        },
         ];
         let course = [{
             value: 'Zumba',
@@ -47,16 +47,15 @@ export default class Courses extends Component {
         }, {
             value: 'Crunch',
         }];
- 
+
         return (
             <View style={styles.container}>
-             <Header
-        containerStyle={{ width: '100%', backgroundColor: '#09203f', borderBottomWidth: 0,maxHeight:'5%' }}
-centerComponent={{ text: 'Courses', style: { color: '#fff',marginBottom:'7%', fontSize:18} }}
-
-/>
+                <Header
+                    containerStyle={{ width: '100%', backgroundColor: '#09203f', borderBottomWidth: 0, maxHeight: '5%' }}
+                    centerComponent={{ text: 'Courses', style: { color: '#fff', marginBottom: '7%', fontSize: 18 } }}
+                />
                 <View style={styles.dropdown}>
-                <Dropdown
+                    <Dropdown
                         label='Choose a Day'
                         data={day}
                     />
@@ -68,7 +67,7 @@ centerComponent={{ text: 'Courses', style: { color: '#fff',marginBottom:'7%', fo
                         label='Choose Time slot'
                         data={time}
                     />
-                    
+
 
                 </View>
             </View>

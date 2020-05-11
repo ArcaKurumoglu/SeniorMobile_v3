@@ -20,39 +20,79 @@ import {
 } from 'react-native';
 
 import { Actions } from 'react-native-router-flux';
+import { Field, reduxForm } from 'redux-form';
+import InputText from "../components/InputText";
+import axios from 'axios';
 
-export default class Logo extends Component {
+class Form extends Component {
 
-    home(){
-        Actions.home()
+    constructor(){
+        super();
+        this.state = {
+            id:"",
+            password:""
+        }
+    }
+
+    loginPressed = () => {
+        console.log("BURASI");
+        const user = {
+            bilkentId: this.state.id,
+            password: this.state.password
+        }
+
+        axios.post("http://192.168.1.31:8082/login", { user })
+            .then(res => {
+                if (res.status === 200) {
+                    Actions.home()
+                }
+            });
+    }
+
+    handleChange(e) {
+        console.log(e);
+        // this.setState({ [e.target.name]: event.target.value });
+    }
+
+    renderTextInput = (field) => {
+        const { meta: { touched, error }, label, secureTextEntry, maxLength, keyboardType, placeholder, input: { onChange, ...restInput } } = field;
+        return (
+            <View>
+                <InputText
+                    onChangeText={onChange}
+                    maxLength={maxLength}
+                    placeholder={placeholder}
+                    keyboardType={keyboardType}
+                    secureTextEntry={secureTextEntry}
+                    label={label}
+                    {...restInput}
+
+                />
+                {(touched && error) && <Text style={styles.errorText}>{error}</Text>}
+            </View>
+        );
 
     }
 
     render() {
+        console.log(this.state);
         return (
             <View style={styles.container}>
-
-                <TextInput style={styles.inputBox}
-
-                    underlineColorAndroid='rgba(0,0,0,0)'
-                    placeholder="Enter your E-mail"
-                    placeholderTextColor="#ffffff"
-                    selectionColor="#fff"
-                    
-                    keyboardType="email-address"
-                    onSubmitEditing={()=>this.password.focus()}
-                />
-                
-                <TextInput style={styles.inputBox}
-
-                    underlineColorAndroid='rgba(0,0,0,0)'
-                    placeholder="Enter your password"
+                <Field
+                    name="id"
+                    placeholder="Id"
+                    value={this.state.id}
+                    onChange={this.handleChange}
+                    component={this.renderTextInput} />
+                <Field
                     secureTextEntry={true}
-                    placeholderTextColor="#ffffff"
-                    ref={(input)=>this.password=input}
-                />
-                <TouchableOpacity style={styles.button} onPress={this.home}>
-                    <Text style={styles.buttonText}>{this.props.type}</Text>
+                    name="password"
+                    placeholder="Password"
+                    value={this.state.password}
+                    onChange={this.handleChange}
+                    component={this.renderTextInput} />
+                <TouchableOpacity style={styles.button} onPress={this.loginPressed}>
+                    <Text style={styles.buttonText}>LOGIN</Text>
                 </TouchableOpacity>
             </View>
         );
@@ -67,11 +107,11 @@ const styles = StyleSheet.create({
 
     },
     inputBox: {
-        
-        borderWidth:1,
-        borderBottomColor:'#09203f',
-        
-        width:300,
+
+        borderWidth: 1,
+        borderBottomColor: '#09203f',
+
+        width: 300,
         maxHeight: '30%',
         backgroundColor: 'rgba(255,255,255,0.1)',
         color: '#ffffff',
@@ -100,3 +140,8 @@ const styles = StyleSheet.create({
     }
 
 });
+
+
+export default reduxForm({
+    form: "form"
+})(Form)

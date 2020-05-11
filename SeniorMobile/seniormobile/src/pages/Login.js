@@ -21,11 +21,10 @@ export default class Login extends Component {
 
     registers(){
         Actions.register()
-
     }
+
     home(){
         Actions.home()
-
     }
     
     render() {
@@ -85,3 +84,4 @@ const styles = StyleSheet.create({
     }
 
 });
+

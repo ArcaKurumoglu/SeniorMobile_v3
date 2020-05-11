@@ -7,40 +7,59 @@
  */
 
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, Platform, FlatList, Image, SafeAreaView,ScrollView  } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, Platform, FlatList, Image, SafeAreaView, ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import CollapsibleList from "react-native-collapsible-list";
+import axios from 'axios';
 
 export default class Events extends Component {
 
-   
+    constructor() {
+        super();
+        this.state = {
+            events: []
+        }
+    }
+
+    componentDidMount() {
+        axios.get("http://192.168.1.31:8082/events")
+            .then(response => this.setState({
+                events: response.data
+            })
+            ).catch((error) => {
+                console.log(error.message)
+            })
+    }
+
     render() {
-       
+        const { events } = this.state;
         return (
             <View style={styles.container}>
- 
- <CollapsibleList
+
+                {events ? events.map((x) =>
+                    <CollapsibleList
                         numberOfVisibleItems={1}
                         wrapperStyle={styles.wrapperCollapsibleList}
                         buttonContent={
                             <View style={styles.button}>
-                                <Text style={styles.buttonText}><Icon name="chevron-down" style={styles.icons}/></Text>
+                                <Text style={styles.buttonText}><Icon name="chevron-down" style={styles.icons} /></Text>
                             </View>
-                        }
-                    >
+                        }>
                         <View style={styles.collapsibleItem}>
-                            <Text style={styles.announcement}><Icon name="bullhorn" style={styles.icons} /> “SPORTS AS A WAY OF LIFE” Zumba Master Class 2020, Spring </Text>
+                            <Text style={styles.announcement}><Icon name="bullhorn" style={styles.icons} /> {x.title}
+                            </Text>
                         </View>
                         <View style={styles.collapsibleItem}>
-                            <Text>Date: March 3, Tuesday Time: 18:30 p.m. </Text>
+                            <Text>Start Date: {x.startdate}</Text>
                         </View>
                         <View style={styles.collapsibleItem}>
-                            <Text>Place : Main Sports Hall</Text>
+                            <Text>End Date: {x.enddate}</Text>
                         </View>
                         <View style={styles.collapsibleItem}>
-                            <Text>No description</Text>
+                            <Text>{x.text}</Text>
                         </View>
                     </CollapsibleList>
+                ) : <div></div>}
             </View>
         );
     }
@@ -48,8 +67,8 @@ export default class Events extends Component {
 
 const styles = StyleSheet.create({
 
-    container :{
-flex:1
+    container: {
+        flex: 1
     },
 
 
@@ -76,7 +95,7 @@ flex:1
     },
     buttonText: {
         textAlign: "center",
-        fontWeight:"bold",
+        fontWeight: "bold",
     },
     announcement: {
 

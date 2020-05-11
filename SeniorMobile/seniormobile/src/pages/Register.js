@@ -18,21 +18,24 @@ import {
     ImageBackground,
     TouchableOpacity,
 } from 'react-native';
-import { Field, reduxForm } from 'redux-form';
+import { Field, reduxForm, formValueSelector} from 'redux-form';
+import axios from "axios";
 import Logo from '../components/Logo';
 import Form from '../components/Form';
 import { Actions } from 'react-native-router-flux';
 import { onChange } from 'react-native-reanimated';
 import InputText from "../components/InputText";
+import { Dropdown } from 'react-native-material-dropdown';
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: '#09203f',
-    
+
     },
-    bgcolor:{
+    bgcolor: {
         backgroundColor: '#09203f'
     },
     inputBox: {
@@ -43,7 +46,7 @@ const styles = StyleSheet.create({
         paddingTop: 100,
         borderRadius: 10,
         position: 'absolute',
-        
+
     },
 
     signupTextCont: {
@@ -51,7 +54,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         textAlign: 'center',
-        
+
 
     },
     registerButton: {
@@ -78,7 +81,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#041328',
         borderRadius: 25,
         paddingVertical: 13,
-        marginVertical:4,
+        marginVertical: 4,
 
     },
     Text: {
@@ -87,7 +90,7 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: '500',
         color: '#ffffff',
-        
+
 
     },
     bilText: {
@@ -104,19 +107,29 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: '500',
         color: '#ffffff',
-       
+
 
     },
-    errorText:{
-        color:'#ffffff',
-        paddingHorizontal:15,
-        
-    }
+    errorText: {
+        color: '#ffffff',
+        paddingHorizontal: 15,
+
+    },
+    dropdownView: {
+        width: '65%'
+    },
+    dropdown: {
+        backgroundColor: '#ffffff',
+        opacity: 0.7
+    },
 
 });
 
 class Register extends Component {
-
+    constructor(){
+        super()
+        this.onSubmit = this.onSubmit.bind(this)
+    }
     signs() {
         Actions.pop()
     }
@@ -125,7 +138,23 @@ class Register extends Component {
         alert("Registered")
     }
     onSubmit = (values) => {
-        console.log(values);
+        const user = {
+            name: values.name,
+            surname: values.surname,
+            bilkentId: values.id,
+            email: values.email,
+            password: values.password,
+            status: 'Status'
+        }
+        console.log(user)
+        axios.post("http://localhost:8082/register", user)
+            .then(res => {
+                if (res.status === 200) {
+                    console.log("WORKED")
+                    Actions.login()
+                }
+            })
+        Actions.login()
     }
 
 
@@ -143,57 +172,66 @@ class Register extends Component {
                     {...restInput}
 
                 />
-               {(touched && error) &&<Text style={styles.errorText}>{error}</Text>}
+                {(touched && error) && <Text style={styles.errorText}>{error}</Text>}
             </View>
         );
 
     }
     render() {
         const { handleSubmit } = this.props;
+        let status = [{
+            value: 'Student',
+        }, {
+            value: 'Academic',
+        }, {
+            value: 'Personnel',
+        }, {
+            value: 'Alumni'
+        }
+        ];
         return (
             <ScrollView style={styles.bgcolor}>
-            <View style={styles.container}>
-            <Logo />
-                <Text style={styles.registerText}>REGISTER FORM</Text>
-
-                <Field
-                    name="name"
-                    placeholder="Name"
-                    component={this.renderTextInput} />
-                <Field
-                    name="surname"
-                    placeholder="Surname"
-                    component={this.renderTextInput} />
-                <Field
-                    name="id"
-                    placeholder="Bilkent ID Number"
-                    component={this.renderTextInput} />
-                <Field
-                    name="email"
-                    placeholder="E-mail address"
-                    component={this.renderTextInput} />
-                <Field
-                    name="password"
-                    placeholder="Password"
-                    secureTextEntry={true}
-                    component={this.renderTextInput} />
-                <Field
-                    name="repassword"
-                    placeholder="Confirm Password"
-                    secureTextEntry={true}
-                    component={this.renderTextInput} />
+                <View style={styles.container}>
+                    <Logo />
+                    <Text style={styles.registerText}>REGISTER FORM</Text>
+                    <Field
+                        name="name"
+                        placeholder="Name"
+                        component={this.renderTextInput} />
+                    <Field
+                        name="surname"
+                        placeholder="Surname"
+                        component={this.renderTextInput} />
+                    <Field
+                        name="id"
+                        placeholder="Bilkent ID Number"
+                        component={this.renderTextInput} />
+                    <Field
+                        name="email"
+                        placeholder="E-mail address"
+                        component={this.renderTextInput} />
+                    <Field
+                        name="password"
+                        placeholder="Password"
+                        secureTextEntry={true}
+                        component={this.renderTextInput} />
+                    <Field
+                        name="repassword"
+                        placeholder="Confirm Password"
+                        secureTextEntry={true}
+                        component={this.renderTextInput} />
                     
-                <TouchableOpacity style={styles.button} onPress={handleSubmit(this.onSubmit)}>
-                    <Text style={styles.buttonText}>REGISTER</Text>
-                </TouchableOpacity>
+                    <TouchableOpacity style={styles.button} onPress={handleSubmit(this.onSubmit)}>
+                        <Text style={styles.buttonText}>REGISTER</Text>
+                    </TouchableOpacity>
 
 
-                <View style={styles.signupTextCont}>
-                    <Text style={styles.accountText}>Already have an account?</Text>
-                    <TouchableOpacity onPress={this.signs}><Text style={styles.registerButton}>Sign In</Text></TouchableOpacity>
+                    <View style={styles.signupTextCont}>
+                        <Text style={styles.accountText}>Already have an account?</Text>
+                        <TouchableOpacity onPress={this.signs}><Text style={styles.registerButton}>Sign In</Text></TouchableOpacity>
+                    </View>
+
                 </View>
-
-            </View>
             </ScrollView>
         );
     }
@@ -223,8 +261,10 @@ const validate = (values) => {
     return errors;
 }
 
-export default reduxForm({
+// const selector = formValueSelector('selectingFormValues') // <-- same as form name
 
+
+export default reduxForm({
     form: "register",
     validate
 })(Register)

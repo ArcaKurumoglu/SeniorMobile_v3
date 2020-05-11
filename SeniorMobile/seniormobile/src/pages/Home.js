@@ -32,7 +32,6 @@ function DrawerRoutes (){
 
 function TabRoutes() {
     return (
-       
             <Tab.Navigator
             
              screenOptions={({ route }) => ({
