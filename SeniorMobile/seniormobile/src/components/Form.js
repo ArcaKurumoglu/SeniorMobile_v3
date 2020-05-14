@@ -32,6 +32,8 @@ class Form extends Component {
             id:"",
             password:""
         }
+        this.handleChangeid = this.handleChangeid.bind(this);
+        this.handleChangepass = this.handleChangepass.bind(this);
     }
 
     loginPressed = () => {
@@ -49,9 +51,12 @@ class Form extends Component {
             });
     }
 
-    handleChange(e) {
-        console.log(e);
-        // this.setState({ [e.target.name]: event.target.value });
+    handleChangeid(e) {
+        this.setState({ id: e });
+    }
+
+    handleChangepass(e) {
+        this.setState({ password: e });
     }
 
     renderTextInput = (field) => {
@@ -82,14 +87,14 @@ class Form extends Component {
                     name="id"
                     placeholder="Id"
                     value={this.state.id}
-                    onChange={this.handleChange}
+                    onChange={this.handleChangeid}
                     component={this.renderTextInput} />
                 <Field
                     secureTextEntry={true}
                     name="password"
                     placeholder="Password"
                     value={this.state.password}
-                    onChange={this.handleChange}
+                    onChange={this.handleChangepass}
                     component={this.renderTextInput} />
                 <TouchableOpacity style={styles.button} onPress={this.loginPressed}>
                     <Text style={styles.buttonText}>LOGIN</Text>
@@ -107,10 +112,8 @@ const styles = StyleSheet.create({
 
     },
     inputBox: {
-
         borderWidth: 1,
         borderBottomColor: '#09203f',
-
         width: 300,
         maxHeight: '30%',
         backgroundColor: 'rgba(255,255,255,0.1)',
@@ -120,7 +123,6 @@ const styles = StyleSheet.create({
         marginVertical: 10,
         fontSize: 15,
         letterSpacing: 0.1,
-
     },
     buttonText: {
         letterSpacing: 4,
